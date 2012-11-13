@@ -149,19 +149,6 @@
         $('div.fields', this.parentNode).slideToggle();
     });
 
-    // Toggle ExpectResponses section
-    $('div.expect-responses h4').click(function(event) {
-        event.preventDefault();
-
-        $(this.parentNode).toggleClass('expanded');
-
-        $('div.fields', this.parentNode).slideToggle();
-
-        if($('div.fields').is(":visible")) {
-            prettyPrint();
-        }
-    });
-
     // Auth with OAuth
     $('#credentials').submit(function(event) {
         event.preventDefault();
@@ -186,9 +173,11 @@
         var params = $(this).serializeArray(),
             apiKey = { name: 'apiKey', value: $('input[name=key]').val() },
             apiSecret = { name: 'apiSecret', value: $('input[name=secret]').val() },
-            apiName = { name: 'apiName', value: $('input[name=apiName]').val() };
+            apiName = { name: 'apiName', value: $('input[name=apiName]').val() },
+            apiUsername = { name: 'apiUsername', value: $('input[name=username]').val() },
+            apiPassword = { name: 'apiPassword', value: $('input[name=password]').val() };
 
-        params.push(apiKey, apiSecret, apiName);
+        params.push(apiKey, apiSecret, apiName, apiUsername, apiPassword);
 
         // Setup results container
         var resultContainer = $('.result', self);
@@ -219,10 +208,6 @@
             // Call that was made, add pre elements
             resultContainer.append($(document.createElement('h4')).text('Call'));
             resultContainer.append($(document.createElement('pre')).addClass('call'));
-
-            // Code
-            resultContainer.append($(document.createElement('h4')).text('Response Code'));
-            resultContainer.append($(document.createElement('pre')).addClass('code prettyprint'));
 
             // Header
             resultContainer.append($(document.createElement('h4')).text('Response Headers'));
@@ -271,11 +256,6 @@
             if (response.call) {
                 $('pre.call', resultContainer)
                     .text(response.call);
-            }
-
-            if (response.code) {
-                $('pre.code', resultContainer)
-                    .text(response.code);
             }
 
             if (response.headers) {

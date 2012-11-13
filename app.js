@@ -487,6 +487,10 @@ function processRequest(req, res, next) {
             options.path += apiConfig.keyParam + '=' + apiKey;
         }
 
+        if (apiConfig.auth=='basicAuth') {
+            options.headers['Authorization']='Basic '+new Buffer(reqQuery.apiUsername+':'+reqQuery.apiPassword).toString('base64');
+        }
+
         // Perform signature routine, if any.
         if (apiConfig.signature) {
             if (apiConfig.signature.type == 'signed_md5') {
